@@ -1,17 +1,13 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "react-toastify/dist/ReactToastify.css";
-import LocationService from "./Services/LocationService";
+import HomePage from "./Pages";
+import { ToastContainer } from "react-toastify";
 
 function App() {
-  useEffect(() => {
-    LocationService.getAllLocations("Kolkata").then((res) => {
-      console.log(res);
-    });
-  }, []);
-
   return (
-    <div className="App">
-      <h1>Hello World</h1>
+    <div>
+      <ToastContainer />
+      <HomePage />
     </div>
   );
 }
