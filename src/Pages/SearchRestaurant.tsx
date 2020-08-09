@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import LocationService from "../Services/LocationService";
 import { Location } from "../types/Location";
+import SearchRestaurantForm from "../Components/SearchRestaurantForm";
 
 const SearchRestaurantPage = () => {
   const { locationId } = useParams();
@@ -19,7 +20,11 @@ const SearchRestaurantPage = () => {
     setLocation(location);
   };
 
-  return <>SearchRestaurantPage</>;
+  return (
+    <>
+      <SearchRestaurantForm location={location} />
+    </>
+  );
 };
 
 export default SearchRestaurantPage;
