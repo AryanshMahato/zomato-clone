@@ -14,4 +14,17 @@ export default class LocationService {
       });
     }
   };
+
+  public static getLocation = async (locationId: number) => {
+    try {
+      const { data } = await mAxios.post("/location", {
+        id: locationId,
+      });
+      return data.location;
+    } catch (e) {
+      toast.error("Cannot fetch Location", {
+        autoClose: 5000,
+      });
+    }
+  };
 }
