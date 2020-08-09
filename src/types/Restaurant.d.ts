@@ -9,7 +9,7 @@ export interface Cuisines {
 }
 
 export interface AllRestaurant {
-  id: string;
+  id: number;
   name: string;
   timings: string;
   rating: string;

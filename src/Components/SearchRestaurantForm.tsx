@@ -5,6 +5,7 @@ import RestaurantService, {
 } from "../Services/RestaurantService";
 import { Location } from "../types/Location";
 import { AllRestaurant, Category, Cuisines } from "../types/Restaurant";
+import RestaurantList from "./RestaurantList";
 
 interface SearchRestaurantFormProps {
   location: Location | {};
@@ -92,56 +93,64 @@ const SearchRestaurantForm = ({
   };
 
   return (
-    <Box mx={"auto"} width={"fit-content"}>
-      <form>
-        <Box my={"2rem"} display={"flex"}>
-          <Box mr={"2.5rem"}>
+    <>
+      <Box mx={"auto"} width={"fit-content"}>
+        <form>
+          <Box my={"2rem"} display={"flex"}>
+            <Box mr={"2.5rem"}>
+              <Select
+                value={selectedCategory.id}
+                onChange={categoryChangeHandler}
+              >
+                <MenuItem value={0} disabled style={{ display: "none" }}>
+                  Select Category
+                </MenuItem>
+                {categories.map((category) => (
+                  <MenuItem key={category.id} value={category.id}>
+                    {category.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Box>
             <Select
-              value={selectedCategory.id}
-              onChange={categoryChangeHandler}
+              value={selectedCuisines.id}
+              onChange={cuisinesChangeHandler}
             >
               <MenuItem value={0} disabled style={{ display: "none" }}>
-                Select Category
+                Select Cuisine
               </MenuItem>
-              {categories.map((category) => (
-                <MenuItem key={category.id} value={category.id}>
-                  {category.name}
+              {cuisines.map((cuisine) => (
+                <MenuItem key={cuisine.id} value={cuisine.id}>
+                  {cuisine.name}
                 </MenuItem>
               ))}
             </Select>
           </Box>
-          <Select value={selectedCuisines.id} onChange={cuisinesChangeHandler}>
-            <MenuItem value={0} disabled style={{ display: "none" }}>
-              Select Cuisine
-            </MenuItem>
-            {cuisines.map((cuisine) => (
-              <MenuItem key={cuisine.id} value={cuisine.id}>
-                {cuisine.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </Box>
-      </form>
-      <form onSubmit={formSubmitHandler}>
-        <Box display={"flex"}>
-          <Box mr={"2rem"}>
-            <TextField
-              placeholder={"Enter Restaurant Name"}
-              onChange={restaurantChangeHandler}
-              value={restaurantInput}
-            />
+        </form>
+        <form onSubmit={formSubmitHandler}>
+          <Box display={"flex"}>
+            <Box mr={"2rem"}>
+              <TextField
+                placeholder={"Enter Restaurant Name"}
+                onChange={restaurantChangeHandler}
+                value={restaurantInput}
+              />
+            </Box>
+            <Button
+              type={"submit"}
+              variant="contained"
+              color="primary"
+              disableElevation
+            >
+              Search
+            </Button>
           </Box>
-          <Button
-            type={"submit"}
-            variant="contained"
-            color="primary"
-            disableElevation
-          >
-            Search
-          </Button>
-        </Box>
-      </form>
-    </Box>
+        </form>
+      </Box>
+      <Box mt={"3rem"}>
+        <RestaurantList restaurants={restaurants} />
+      </Box>
+    </>
   );
 };
 
