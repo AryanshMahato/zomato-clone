@@ -5,6 +5,7 @@ import RestaurantService, {
 } from "../Services/RestaurantService";
 import { AllRestaurant, Category, Cuisines } from "../types/Restaurant";
 import RestaurantList from "./RestaurantList";
+import { toast } from "react-toastify";
 
 interface SearchRestaurantFormProps {
   locationId: string;
@@ -44,6 +45,9 @@ const SearchRestaurantForm = ({ locationId }: SearchRestaurantFormProps) => {
       cuisineId: selectedCuisines.id,
       categoryId: selectedCategory.id,
     })) as GetAllRestaurantsReturn;
+
+    if (!response.restaurantFound)
+      toast.error("No Restaurants found in this constraints");
 
     setRestaurants(response.restaurants);
     setFetchedRestaurants(response.restaurants);
