@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Paper,
@@ -9,14 +9,34 @@ import {
   TableHead,
   TableRow,
 } from "@material-ui/core";
-import { AllRestaurant } from "../types/Restaurant";
+import { AllRestaurant, Restaurant } from "../types/Restaurant";
+import RestaurantModal from "./RestaurantModal";
+import RestaurantService from "../Services/RestaurantService";
 
 interface RestaurantListProps {
   restaurants: Array<AllRestaurant>;
 }
 
 const RestaurantList = ({ restaurants }: RestaurantListProps) => {
-  const restaurantClickHandler = (id: number) => {};
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [restaurant, setRestaurant] = useState<Restaurant | undefined>();
+
+  const restaurantClickHandler = async (id: number) => {
+    await getRestaurant(id);
+    setOpenModal(true);
+  };
+
+  const handleModalClose = () => {
+    setOpenModal(false);
+  };
+
+  const getRestaurant = async (restaurantId: number) => {
+    const restaurant = (await RestaurantService.getRestaurant(
+      restaurantId
+    )) as Restaurant;
+
+    setRestaurant(restaurant);
+  };
 
   return (
     <Box width={"100%"}>
@@ -48,6 +68,11 @@ const RestaurantList = ({ restaurants }: RestaurantListProps) => {
           </TableBody>
         </Table>
       </TableContainer>
+      <RestaurantModal
+        open={openModal}
+        handleModalClose={handleModalClose}
+        restaurant={restaurant}
+      />
     </Box>
   );
 };

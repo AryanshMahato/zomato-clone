@@ -45,9 +45,7 @@ export default class RestaurantService {
     }
   };
 
-  public static getRestaurant = async (
-    restaurantId: number
-  ): Promise<GetAllRestaurantsReturn | undefined> => {
+  public static getRestaurant = async (restaurantId: number) => {
     try {
       const { data } = await mAxios.post("/restaurant/", {
         id: restaurantId,
