@@ -4,10 +4,8 @@ import { toast } from "react-toastify";
 export default class LocationService {
   public static getAllLocations = async (location: string) => {
     try {
-      const { data } = await mAxios.get("/location/all", {
-        params: {
-          location,
-        },
+      const { data } = await mAxios.post("/location/all", {
+        location,
       });
       return data.locations;
     } catch (e) {
