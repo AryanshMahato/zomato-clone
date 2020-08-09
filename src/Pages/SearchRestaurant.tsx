@@ -22,7 +22,7 @@ const SearchRestaurantPage = () => {
 
   return (
     <>
-      <SearchRestaurantForm location={location} />
+      <SearchRestaurantForm location={location} locationId={locationId} />
     </>
   );
 };

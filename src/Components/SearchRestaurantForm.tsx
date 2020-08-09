@@ -1,14 +1,20 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Box, Button, MenuItem, Select, TextField } from "@material-ui/core";
-import RestaurantService from "../Services/RestaurantService";
+import RestaurantService, {
+  GetAllRestaurantsReturn,
+} from "../Services/RestaurantService";
 import { Location } from "../types/Location";
-import { Category, Cuisines } from "../types/Restaurant";
+import { AllRestaurant, Category, Cuisines } from "../types/Restaurant";
 
 interface SearchRestaurantFormProps {
   location: Location | {};
+  locationId: string;
 }
 
-const SearchRestaurantForm = ({ location }: SearchRestaurantFormProps) => {
+const SearchRestaurantForm = ({
+  location,
+  locationId,
+}: SearchRestaurantFormProps) => {
   // Category State
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
@@ -25,12 +31,25 @@ const SearchRestaurantForm = ({ location }: SearchRestaurantFormProps) => {
 
   // Restaurant State
   const [restaurantInput, setRestaurantInput] = useState("");
-  const [restaurant, setRestaurant] = useState([]);
+  const [restaurants, setRestaurants] = useState<AllRestaurant[]>([]);
+  const [totalRestaurant, setTotalRestaurant] = useState<number>(0);
 
   useEffect(() => {
     getCategories();
     getCuisines();
+    getRestaurants();
   }, []);
+
+  const getRestaurants = async () => {
+    const response = (await RestaurantService.getAllRestaurants({
+      locationId: +locationId,
+      cuisineId: selectedCuisines.id,
+      categoryId: selectedCategory.id,
+    })) as GetAllRestaurantsReturn;
+
+    setRestaurants(response.restaurants);
+    setTotalRestaurant(response.restaurantFound);
+  };
 
   const getCategories = async () => {
     const categories = (await RestaurantService.getAllCategories()) as Array<
@@ -40,21 +59,27 @@ const SearchRestaurantForm = ({ location }: SearchRestaurantFormProps) => {
   };
 
   const getCuisines = async () => {
-    const cuisines = (await RestaurantService.getAllCategories()) as Array<
-      Cuisines
-    >;
+    const cuisines = (await RestaurantService.getAllCuisines(
+      +locationId
+    )) as Array<Cuisines>;
     setCuisines(cuisines);
   };
 
   const categoryChangeHandler = (event: ChangeEvent<any>) => {
     const { value: id } = event.target;
     const selectedCategory = categories.find((category) => category.id === +id);
-    if (selectedCategory?.id) setSelectedCategory(selectedCategory);
+    if (selectedCategory?.id) {
+      setSelectedCategory(selectedCategory);
+      getRestaurants();
+    }
   };
   const cuisinesChangeHandler = (event: ChangeEvent<any>) => {
     const { value: id } = event.target;
     const selectedCuisines = cuisines.find((cuisines) => cuisines.id === +id);
-    if (selectedCuisines?.id) setSelectedCuisines(selectedCuisines);
+    if (selectedCuisines?.id) {
+      setSelectedCuisines(selectedCuisines);
+      getRestaurants();
+    }
   };
 
   const formSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
