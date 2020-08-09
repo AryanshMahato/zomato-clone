@@ -1,21 +1,16 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { Box, Button, MenuItem, Select, TextField } from "@material-ui/core";
+import React, { ChangeEvent, useEffect, useState } from "react";
+import { Box, MenuItem, Select, TextField } from "@material-ui/core";
 import RestaurantService, {
   GetAllRestaurantsReturn,
 } from "../Services/RestaurantService";
-import { Location } from "../types/Location";
 import { AllRestaurant, Category, Cuisines } from "../types/Restaurant";
 import RestaurantList from "./RestaurantList";
 
 interface SearchRestaurantFormProps {
-  location: Location | {};
   locationId: string;
 }
 
-const SearchRestaurantForm = ({
-  location,
-  locationId,
-}: SearchRestaurantFormProps) => {
+const SearchRestaurantForm = ({ locationId }: SearchRestaurantFormProps) => {
   // Category State
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category>({
@@ -36,7 +31,6 @@ const SearchRestaurantForm = ({
   const [fetchedRestaurants, setFetchedRestaurants] = useState<AllRestaurant[]>(
     []
   );
-  const [totalRestaurant, setTotalRestaurant] = useState<number>(0);
 
   useEffect(() => {
     getCategories();
@@ -53,7 +47,6 @@ const SearchRestaurantForm = ({
 
     setRestaurants(response.restaurants);
     setFetchedRestaurants(response.restaurants);
-    setTotalRestaurant(response.restaurantFound);
   };
 
   const getCategories = async () => {

@@ -6,17 +6,9 @@ import LocationService from "../Services/LocationService";
 import Locations from "../Components/Locations";
 import { toast } from "react-toastify";
 
-const TEST_DATA = [
-  { id: 2, name: "Kolkata", country: "India" },
-  { id: 11334, name: "Kolhapur", country: "India" },
-  { id: 193, name: "Kolín", country: "Czech Republic" },
-  { id: 11499, name: "Kolar", country: "India" },
-  { id: 11472, name: "Kollam", country: "India" },
-];
-
 const HomePage = () => {
   const [location, setLocation] = useState("");
-  const [locations, setLocations] = useState<Array<AllLocation>>(TEST_DATA);
+  const [locations, setLocations] = useState<Array<AllLocation>>();
 
   const getLocations = async () => {
     const locations = (await LocationService.getAllLocations(
@@ -63,7 +55,7 @@ const HomePage = () => {
           </Button>
         </Box>
       </form>
-      {!!locations.length && (
+      {!!locations?.length && (
         <Box width={"95vw"} maxWidth={"1200px"} mt={"2rem"}>
           <Locations locations={locations} />
         </Box>
