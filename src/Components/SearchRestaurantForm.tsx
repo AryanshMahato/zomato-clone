@@ -33,6 +33,9 @@ const SearchRestaurantForm = ({
   // Restaurant State
   const [restaurantInput, setRestaurantInput] = useState("");
   const [restaurants, setRestaurants] = useState<AllRestaurant[]>([]);
+  const [fetchedRestaurants, setFetchedRestaurants] = useState<AllRestaurant[]>(
+    []
+  );
   const [totalRestaurant, setTotalRestaurant] = useState<number>(0);
 
   useEffect(() => {
@@ -49,6 +52,7 @@ const SearchRestaurantForm = ({
     })) as GetAllRestaurantsReturn;
 
     setRestaurants(response.restaurants);
+    setFetchedRestaurants(response.restaurants);
     setTotalRestaurant(response.restaurantFound);
   };
 
@@ -83,12 +87,12 @@ const SearchRestaurantForm = ({
     }
   };
 
-  const formSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-  };
-
   const restaurantChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+    const filteredRestaurants = fetchedRestaurants.filter((restaurant) =>
+      restaurant.name.includes(value)
+    );
+    setRestaurants(filteredRestaurants);
     setRestaurantInput(value);
   };
 
@@ -127,25 +131,14 @@ const SearchRestaurantForm = ({
             </Select>
           </Box>
         </form>
-        <form onSubmit={formSubmitHandler}>
-          <Box display={"flex"}>
-            <Box mr={"2rem"}>
-              <TextField
-                placeholder={"Enter Restaurant Name"}
-                onChange={restaurantChangeHandler}
-                value={restaurantInput}
-              />
-            </Box>
-            <Button
-              type={"submit"}
-              variant="contained"
-              color="primary"
-              disableElevation
-            >
-              Search
-            </Button>
-          </Box>
-        </form>
+        <Box mr={"2rem"} width={"100%"}>
+          <TextField
+            fullWidth
+            placeholder={"Enter Restaurant Name"}
+            onChange={restaurantChangeHandler}
+            value={restaurantInput}
+          />
+        </Box>
       </Box>
       <Box mt={"3rem"}>
         <RestaurantList restaurants={restaurants} />
